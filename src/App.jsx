@@ -100,13 +100,13 @@ export default function ChessWorkshopLanding() {
             <div className="rounded-3xl border border-slate-200 shadow-sm bg-white overflow-hidden">
             <div className="grid grid-cols-3 gap-1 h-64">
                 <div className="relative">
-                <img src="/images/chess1.jpg" alt="Chess board 1" className="absolute inset-0 w-full h-full object-cover rounded-l-3xl" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/placeholder.jpg';}} />
+                <img src="/images/chess1.jpg" alt="Chess board 1" className="absolute inset-0 w-full h-full object-cover rounded-l-3xl" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
                 </div>
                 <div className="relative">
-                <img src="/images/chess2.jpg" alt="Chess board 2" className="absolute inset-0 w-full h-full object-cover" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/placeholder.jpg';}} />
+                <img src="/images/chess2.jpg" alt="Chess board 2" className="absolute inset-0 w-full h-full object-cover" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
                 </div>
                 <div className="relative">
-                <img src="/images/chess3.jpg" alt="Chess board 3" className="absolute inset-0 w-full h-full object-cover rounded-r-3xl" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/placeholder.jpg';}} />
+                <img src="/images/chess3.jpg" alt="Chess board 3" className="absolute inset-0 w-full h-full object-cover rounded-r-3xl" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
                 </div>
             </div>
             </div>

@@ -35,8 +35,8 @@ function composeWhatsappMessage({ name, email, phone, level, session }) {
 export default function ChessWorkshopLanding() {
   const nextSessions = useMemo(
     () => [
-      { date: "This Sunday", time: "4:00 - 5:30 PM" },
-      { date: "Next Sunday", time: "4:00 - 5:30 PM" },
+      { date: "This Saturday", time: "10:00 - 11:30 AM" },
+      { date: "This Sunday", time: "10:00 - 11:30 AM" },
     ],
     []
   );
@@ -85,7 +85,7 @@ export default function ChessWorkshopLanding() {
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Weekend Chess Workshop in <span className="underline decoration-yellow-400 decoration-4 underline-offset-4">Koramangala</span></h1>
             <p className="mt-4 text-lg text-slate-700">Learn, play, and level up in a cozy home setup with just 8-10 players. A focused, fun, and hands-on 90-minute session designed for real improvement.</p>
             <ul className="mt-6 space-y-2 text-slate-700">
-              <li>1.5 hours, Sundays 4:00-5:30 PM</li>
+              <li>1.5 hours, Saturdays & Sundays 10:00-11:30 AM</li>
               <li>Small group coaching (8-10 seats only)</li>
               <li>Live puzzles, guided games, feedback</li>
               <li>Flat price: <b>Rs 499</b> per person</li>
@@ -98,17 +98,23 @@ export default function ChessWorkshopLanding() {
           </div>
           <div className="relative">
             <div className="rounded-3xl border border-slate-200 shadow-sm bg-white overflow-hidden">
-              <div className="grid grid-cols-3 h-64">
-                <img src="https://images.unsplash.com/photo-1544033527-aa6759ba3b8b?q=80&w=1200&auto=format&fit=crop" alt="Chess board 1" className="w-full h-full object-cover" />
-                <img src="https://images.unsplash.com/photo-1529694157871-0e7badb3b0e5?q=80&w=1200&auto=format&fit=crop" alt="Chess board 2" className="w-full h-full object-cover" />
-                <img src="https://images.unsplash.com/photo-1612010167108-3e7d4b5f9a3f?q=80&w=1200&auto=format&fit=crop" alt="Chess board 3" className="w-full h-full object-cover" />
-              </div>
+            <div className="grid grid-cols-3 gap-1 h-64">
+                <div className="relative">
+                <img src="/images/chess1.jpg" alt="Chess board 1" className="absolute inset-0 w-full h-full object-cover rounded-l-3xl" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/placeholder.jpg';}} />
+                </div>
+                <div className="relative">
+                <img src="/images/chess2.jpg" alt="Chess board 2" className="absolute inset-0 w-full h-full object-cover" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/placeholder.jpg';}} />
+                </div>
+                <div className="relative">
+                <img src="/images/chess3.jpg" alt="Chess board 3" className="absolute inset-0 w-full h-full object-cover rounded-r-3xl" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/placeholder.jpg';}} />
+                </div>
+            </div>
             </div>
             <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl border border-slate-200 shadow p-4 text-sm flex items-center gap-3">
               <img src="/chess-icon.png" alt="Chess icon" className="w-10 h-10" />
               <div>
                 <div className="font-semibold">Next session</div>
-                <div>Sunday - 4:00-5:30 PM</div>
+                <div>Saturday & Sunday - 10:00-11:30 AM</div>
                 <div>Only 10 seats</div>
               </div>
             </div>

@@ -1,12 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 
 // Koramangala Chess Workshop – Full Landing Page (UPI + WhatsApp flow)
+// NOTE: Add three images at public/images/chess1.jpg, chess2.jpg, chess3.jpg and an optional public/images/placeholder.jpg for fallbacks.
 // ASCII-only JSX, safe Tailwind classes. Includes: Header, Hero, About, Curriculum, Sessions, Venue,
 // Booking, Testimonials, FAQ, Footer. No QR or payment gateway.
 
 // ===== CONFIG =====
 const DISPLAY_NUMBER = "6901135664";      // UPI to this mobile number
-const WHATSAPP_NUMBER = "916901135664";   // WhatsApp (with country code)
+const WHATSAPP_NUMBER = "916901135664"; // WhatsApp (with country code)
+const META_PIXEL_ID = "YOUR_PIXEL_ID"; // <-- replace with your Meta Pixel ID
+const SLOTS_LEFT = 10; // update manually each week
 // ==================
 
 // --- Helpers ---
@@ -33,10 +36,27 @@ function composeWhatsappMessage({ name, email, phone, level, session }) {
 }
 
 export default function ChessWorkshopLanding() {
+  // Load Meta Pixel (safely) and track PageView
+  useEffect(() => {
+    if (!META_PIXEL_ID || META_PIXEL_ID === "YOUR_PIXEL_ID") return;
+    if (window.fbq) {
+      window.fbq('init', META_PIXEL_ID);
+      window.fbq('track', 'PageView');
+      return;
+    }
+    (function(f,b,e,v,n,t,s){
+      if(f.fbq)return;n=f.fbq=function(){n.callMethod? n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=true;n.version='2.0';n.queue=[];
+      t=b.createElement(e);t.async=true;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
+    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', META_PIXEL_ID);
+    window.fbq('track', 'PageView');
+  }, []);
+
   const nextSessions = useMemo(
     () => [
-      { date: "This Saturday", time: "10:00 - 11:30 AM" },
-      { date: "This Sunday", time: "10:00 - 11:30 AM" },
+      { date: "This Sunday", time: "4:00 - 5:30 PM" },
+      { date: "Next Sunday", time: "4:00 - 5:30 PM" },
     ],
     []
   );
@@ -57,6 +77,9 @@ export default function ChessWorkshopLanding() {
 
     const msg = composeWhatsappMessage({ name, email, phone, level, session });
     const wa = buildWhatsappUrl(WHATSAPP_NUMBER, msg);
+    if (window.fbq) {
+      window.fbq('trackCustom', 'WhatsAppSubmit', { price: 499, session_label: session });
+    }
     window.open(wa, "_blank");
   };
 
@@ -85,11 +108,14 @@ export default function ChessWorkshopLanding() {
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Weekend Chess Workshop in <span className="underline decoration-yellow-400 decoration-4 underline-offset-4">Koramangala</span></h1>
             <p className="mt-4 text-lg text-slate-700">Learn, play, and level up in a cozy home setup with just 8-10 players. A focused, fun, and hands-on 90-minute session designed for real improvement.</p>
             <ul className="mt-6 space-y-2 text-slate-700">
-              <li>1.5 hours, Saturdays & Sundays 10:00-11:30 AM</li>
+              <li>1.5 hours, Sundays 4:00-5:30 PM</li>
               <li>Small group coaching (8-10 seats only)</li>
               <li>Live puzzles, guided games, feedback</li>
               <li>Flat price: <b>Rs 499</b> per person</li>
             </ul>
+            <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-yellow-100 text-yellow-900 px-3 py-1 text-xs font-semibold">
+              Only {SLOTS_LEFT} seats this Sunday
+            </div>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#book" className="inline-flex items-center rounded-2xl px-6 py-3 text-white bg-slate-900 hover:bg-slate-800 transition shadow">Reserve your seat - Rs 499</a>
               <a href="#curriculum" className="inline-flex items-center rounded-2xl px-6 py-3 border border-slate-300 hover:bg-white transition">What you will learn</a>
@@ -98,23 +124,24 @@ export default function ChessWorkshopLanding() {
           </div>
           <div className="relative">
             <div className="rounded-3xl border border-slate-200 shadow-sm bg-white overflow-hidden">
-            <div className="grid grid-cols-3 gap-1 h-64">
+              {/* Image strip (local assets to avoid external hotlink issues). Place files in /public/images/ */}
+              <div className="grid grid-cols-3 gap-1 h-64">
                 <div className="relative">
-                <img src="/images/chess1.jpg" alt="Chess board 1" className="absolute inset-0 w-full h-full object-cover rounded-l-3xl" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
+                  <img src="/images/chess1.jpg" alt="Chess board 1" className="absolute inset-0 w-full h-full object-cover rounded-l-3xl" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
                 </div>
                 <div className="relative">
-                <img src="/images/chess2.jpg" alt="Chess board 2" className="absolute inset-0 w-full h-full object-cover" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
+                  <img src="/images/chess2.jpg" alt="Chess board 2" className="absolute inset-0 w-full h-full object-cover" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
                 </div>
                 <div className="relative">
-                <img src="/images/chess3.jpg" alt="Chess board 3" className="absolute inset-0 w-full h-full object-cover rounded-r-3xl" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
+                  <img src="/images/chess3.jpg" alt="Chess board 3" className="absolute inset-0 w-full h-full object-cover rounded-r-3xl" onError={(e)=>{ e.currentTarget.onerror = null; e.currentTarget.src = '/images/placeholder.jpg'; }} />
                 </div>
-            </div>
+              </div>
             </div>
             <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl border border-slate-200 shadow p-4 text-sm flex items-center gap-3">
-              <img src="/images/knight.png" alt="Chess icon" className="w-10 h-10" />
+              <img src="/chess-icon.png" alt="Chess icon" className="w-10 h-10" />
               <div>
                 <div className="font-semibold">Next session</div>
-                <div>Saturday & Sunday - 10:00-11:30 AM</div>
+                <div>Sunday - 4:00-5:30 PM</div>
                 <div>Only 10 seats</div>
               </div>
             </div>
@@ -246,7 +273,7 @@ export default function ChessWorkshopLanding() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font medium">Choose session</label>
+                  <label className="block text-sm font-medium">Choose session</label>
                   <select name="session" className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400">
                     {nextSessions.map((s) => (<option key={s.date}>{`${s.date} - ${s.time}`}</option>))}
                   </select>
@@ -342,6 +369,13 @@ export default function ChessWorkshopLanding() {
           </div>
         </div>
       </footer>
+      <a
+        href="https://wa.me/916901135664?text=Hi!%20I%27m%20interested%20in%20the%20Koramangala%20chess%20workshop"
+        className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg bg-green-600 hover:bg-green-700 text-white px-4 py-3"
+        aria-label="Chat on WhatsApp"
+      >
+        Chat on WhatsApp
+      </a>
     </div>
   );
 }

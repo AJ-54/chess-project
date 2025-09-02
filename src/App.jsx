@@ -35,6 +35,44 @@ function composeWhatsappMessage({ name, email, phone, level, session }) {
   );
 }
 
+// === Session time and date helpers ===
+const SESSION_START_HOUR = 10;
+const SESSION_START_MINUTE = 0;
+const SESSION_END_HOUR = 11;
+const SESSION_END_MINUTE = 30;
+const SESSION_LABEL = "10:00 - 11:30 AM";
+const TZ = "Asia/Kolkata";
+
+function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+function dateAtTime(d, h, m) { const x = new Date(d); x.setHours(h, m, 0, 0); return x; }
+function getDateForNextDow(now, targetDow) {
+  const d = new Date(now);
+  const diff = (targetDow - d.getDay() + 7) % 7; // 0..6 ahead
+  d.setDate(d.getDate() + diff);
+  return d;
+}
+function toSessionObj(d) {
+  const start = dateAtTime(d, SESSION_START_HOUR, SESSION_START_MINUTE);
+  const end = dateAtTime(d, SESSION_END_HOUR, SESSION_END_MINUTE);
+  const dateLabel = new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "2-digit", month: "short", timeZone: TZ }).format(start);
+  return { date: dateLabel, time: SESSION_LABEL, start, end };
+}
+function getUpcomingWeekendSessions(now) {
+  const sat = getDateForNextDow(now, 6); // Saturday
+  const sun = getDateForNextDow(now, 0); // Sunday
+  const nextSat = addDays(sat, 7);
+  const nextSun = addDays(sun, 7);
+  const candidates = [sat, sun, nextSat, nextSun].map(toSessionObj);
+  const upcoming = candidates.filter(s => s.end > now).sort((a,b) => a.start - b.start);
+  const seen = new Set();
+  const uniq = [];
+  for (const s of upcoming) {
+    const key = s.start.toISOString().slice(0,10);
+    if (!seen.has(key)) { seen.add(key); uniq.push(s); }
+  }
+  return uniq.slice(0, 2);
+}
+
 export default function ChessWorkshopLanding() {
   // Load Meta Pixel (safely) and track PageView
   useEffect(() => {
@@ -53,13 +91,7 @@ export default function ChessWorkshopLanding() {
     window.fbq('track', 'PageView');
   }, []);
 
-  const nextSessions = useMemo(
-    () => [
-      { date: "This Sunday", time: "4:00 - 5:30 PM" },
-      { date: "Next Sunday", time: "4:00 - 5:30 PM" },
-    ],
-    []
-  );
+  const nextSessions = useMemo(() => getUpcomingWeekendSessions(new Date()), []);
 
   const handleBook = (e) => {
     e.preventDefault();
@@ -108,7 +140,7 @@ export default function ChessWorkshopLanding() {
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Weekend Chess Workshop in <span className="underline decoration-yellow-400 decoration-4 underline-offset-4">Koramangala</span></h1>
             <p className="mt-4 text-lg text-slate-700">Learn, play, and level up in a cozy home setup with just 8-10 players. A focused, fun, and hands-on 90-minute session designed for real improvement.</p>
             <ul className="mt-6 space-y-2 text-slate-700">
-              <li>1.5 hours, Sundays 4:00-5:30 PM</li>
+              <li>1.5 hours, Sat or Sun 10:00-11:30 AM</li>
               <li>Small group coaching (8-10 seats only)</li>
               <li>Live puzzles, guided games, feedback</li>
               <li>Flat price: <b>Rs 499</b> per person</li>
@@ -141,8 +173,8 @@ export default function ChessWorkshopLanding() {
               <img src="/images/knight.png" alt="Chess icon" className="w-10 h-10" />
               <div>
                 <div className="font-semibold">Next session</div>
-                <div>Sunday - 4:00-5:30 PM</div>
-                <div>Only 10 seats</div>
+                <div>{nextSessions && nextSessions[0] ? `${nextSessions[0].date} - ${nextSessions[0].time}` : "Weekend - 10:00-11:30 AM"}</div>
+                <div>Only {SLOTS_LEFT} seats</div>
               </div>
             </div>
           </div>

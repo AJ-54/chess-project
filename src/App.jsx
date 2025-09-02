@@ -91,6 +91,34 @@ export default function ChessWorkshopLanding() {
     window.fbq('track', 'PageView');
   }, []);
 
+  // Set page title and favicon (uses /images/knight.png)
+  useEffect(() => {
+    try {
+      document.title = "Koramangala Chess - Weekend Workshop";
+      const href = "/images/knight.png";
+      const setIcon = (rel) => {
+        let link = document.querySelector(`link[rel='${rel}']`);
+        if (!link) {
+          link = document.createElement('link');
+          link.setAttribute('rel', rel);
+          document.head.appendChild(link);
+        }
+        link.setAttribute('href', href);
+        link.setAttribute('type', 'image/png');
+      };
+      setIcon('icon');
+      setIcon('shortcut icon');
+      // Apple touch icon for iOS
+      let apple = document.querySelector("link[rel='apple-touch-icon']");
+      if (!apple) {
+        apple = document.createElement('link');
+        apple.setAttribute('rel', 'apple-touch-icon');
+        document.head.appendChild(apple);
+      }
+      apple.setAttribute('href', href);
+    } catch {}
+  }, []);
+
   const nextSessions = useMemo(() => getUpcomingWeekendSessions(new Date()), []);
 
   const handleBook = (e) => {
@@ -143,7 +171,7 @@ export default function ChessWorkshopLanding() {
               <li>1.5 hours, Sat or Sun 10:00-11:30 AM</li>
               <li>Small group coaching (8-10 seats only)</li>
               <li>Live puzzles, guided games, feedback</li>
-              <li>Flat price: <b>Rs 499</b> per person</li>
+              <li>Price: <span className="line-through text-slate-400 mr-2">Rs 699</span><b>Rs 499</b> per person</li>
             </ul>
             <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-yellow-100 text-yellow-900 px-3 py-1 text-xs font-semibold">
               Only {SLOTS_LEFT} seats this Sunday
@@ -243,7 +271,7 @@ export default function ChessWorkshopLanding() {
           </div>
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
             <div className="text-sm uppercase tracking-wide text-slate-500">Price</div>
-            <div className="mt-1 text-3xl font-extrabold">Rs 499</div>
+            <div className="mt-1 text-3xl font-extrabold"><span className="line-through text-slate-400 text-2xl mr-2">Rs 699</span>Rs 499</div>
             <ul className="mt-4 text-sm text-slate-700 space-y-1">
               <li>- Bring your curiosity - boards provided</li>
               <li>- Suitable for ages 14+</li>

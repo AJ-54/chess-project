@@ -138,7 +138,7 @@ export default function ChessWorkshopLanding() {
               </div>
             </div>
             <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl border border-slate-200 shadow p-4 text-sm flex items-center gap-3">
-              <img src="/chess-icon.png" alt="Chess icon" className="w-10 h-10" />
+              <img src="/images/knight.png" alt="Chess icon" className="w-10 h-10" />
               <div>
                 <div className="font-semibold">Next session</div>
                 <div>Sunday - 4:00-5:30 PM</div>

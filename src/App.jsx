@@ -8,7 +8,7 @@ import React, { useMemo, useEffect } from "react";
 // ===== CONFIG =====
 const DISPLAY_NUMBER = "6901135664";      // UPI to this mobile number
 const WHATSAPP_NUMBER = "916901135664"; // WhatsApp (with country code)
-const META_PIXEL_ID = "YOUR_PIXEL_ID"; // <-- replace with your Meta Pixel ID
+const META_PIXEL_ID = "2305089033279858"; // <-- replace with your Meta Pixel ID
 const SLOTS_LEFT = 10; // update manually each week
 // ==================
 
